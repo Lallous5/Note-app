@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,21 +23,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
   GlobalKey<FormState> formState = GlobalKey<FormState>();
   // ignore: prefer_typing_uninitialized_variables
   var myusername, myemail, mypassword;
-
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   signUp() async {
     var formData = formState.currentState;
     if (formData!.validate()) {
       loadingOverlay(context);
-      formData.save();
       try {
         final credential =
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: myemail,
-          password: mypassword,
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
         );
-        await FirebaseFirestore.instance
-            .collection("users")
-            .add({"username": myusername, "email": myemail});
+        await FirebaseFirestore.instance.collection("users").add({
+          "username": usernameController.text.trim(),
+          "email": emailController.text.trim(),
+          "TokenId": await FirebaseMessaging.instance.getToken(),
+        });
         Get.off(() => const HomePage());
         if (kDebugMode) {
           print(credential.user!.email);
@@ -76,7 +80,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           print(e);
         }
       }
-    } 
+    }
   }
 
   @override
@@ -87,7 +91,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
           children: [
             const SizedBox(
-              height: 50,
+              height:20,
             ),
             const Text(
               "SIGN UP",
@@ -97,8 +101,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
             const SizedBox(
-              height: 50,
+              height: 10,
             ),
+            Image.asset("assets/images/splashimage.png",width: 400,),
             Form(
               key: formState,
               child: Padding(
@@ -121,9 +126,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
                         cursorColor: kPrimaryColor,
-                        onSaved: (val) {
-                          myusername = val!;
-                        },
+                        controller: usernameController,
+                       
                         decoration: const InputDecoration(
                           hintText: "UserName",
                           prefixIcon: Padding(
@@ -146,9 +150,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       cursorColor: kPrimaryColor,
-                      onSaved: (val) {
-                        myemail = val!;
-                      },
+                      controller: emailController,
                       decoration: const InputDecoration(
                         hintText: "E-mail",
                         prefixIcon: Padding(
@@ -170,9 +172,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             return null;
                           }
                         },
-                        onSaved: (val) {
-                          mypassword = val!;
-                        },
+                        controller: passwordController,
                         textInputAction: TextInputAction.done,
                         obscureText: true,
                         cursorColor: kPrimaryColor,
@@ -186,14 +186,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     const SizedBox(height: defaultPadding / 2),
-                    ElevatedButton(
-                      onPressed: () async {
-                        var response = await signUp();
-                        if (response != null) {
-                          Get.offAll(() => const HomePage());
-                        }
-                      },
-                      child: Text("Sign Up".toUpperCase()),
+                    Hero(
+                      tag: "signup_btn",
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          var response = await signUp();
+                          if (response != null) {
+                            Get.offAll(() => const HomePage());
+                          }
+                        },
+                        child: Text("Sign Up".toUpperCase()),
+                      ),
                     ),
                     const SizedBox(height: defaultPadding),
                     AlreadyHaveAnAccountCheck(
@@ -206,7 +209,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
             ),
-            const SocalSignUp(),
           ],
         )),
       ),

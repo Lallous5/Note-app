@@ -11,7 +11,7 @@ class WelcomeScreen extends StatelessWidget {
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children:  [
               SizedBox(
                 height: 50,
               ),
@@ -22,6 +22,10 @@ class WelcomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              SizedBox(
+                height: 50,
+              ),
+              Image.asset("assets/images/splashimage.png"),
               SizedBox(
                 height: 50,
               ),

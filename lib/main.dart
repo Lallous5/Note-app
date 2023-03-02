@@ -25,13 +25,7 @@ void loadingOverlay(context) {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return Container(
-          height: 100,
-          child: const AlertDialog(
-            title: Text("Please Wait"),
-            content: Center(child: ConstComponents.loadingIndicator),
-          ),
-        );
+        return ConstComponents.loadingIndicator;
       });
 }
 

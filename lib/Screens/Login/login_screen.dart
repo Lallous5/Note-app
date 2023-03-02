@@ -1,5 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,7 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
   GlobalKey<FormState> formState = GlobalKey<FormState>();
   // ignore: prefer_typing_uninitialized_variables
   var myemail, mypassword;
-
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   signIn() async {
     var formData = formState.currentState;
     if (formData!.validate()) {
@@ -29,7 +32,9 @@ class _LoginScreenState extends State<LoginScreen> {
       formData.save();
       try {
         final credential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: myemail, password: mypassword);
+            .signInWithEmailAndPassword(
+                email: emailController.text.trim(),
+                password: passwordController.text.trim());
         Get.off(() => const HomePage());
         if (kDebugMode) {
           print(credential.user!.emailVerified);
@@ -38,6 +43,12 @@ class _LoginScreenState extends State<LoginScreen> {
           User? user = FirebaseAuth.instance.currentUser;
           await user!.sendEmailVerification();
         }
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({
+          "TokenId": await FirebaseMessaging.instance.getToken(),
+        });
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           Navigator.of(context).pop();
@@ -50,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
             print('No user found for that email.');
           }
         } else if (e.code == 'wrong-password') {
-            Navigator.of(context).pop();
+          Navigator.of(context).pop();
           AwesomeDialog(
                   context: context,
                   title: "Error",
@@ -62,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       }
     } else {
-        Navigator.of(context).pop();
+      Navigator.of(context).pop();
       AwesomeDialog(
               context: context, title: "Error", body: const Text("Not Valid"))
           .show();
@@ -83,14 +94,14 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 50,
             ),
             const Text(
-              "LogIn",
+              "Welcome To Your App Note",
               style: TextStyle(
-                fontSize: 22,
+                fontSize: 28,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(
-              height: 50,
+              height: 10,
             ),
             Form(
               key: formState,
@@ -98,13 +109,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
+                    Image.asset("assets/images/login.png"),
+                    const SizedBox(
+                      height: 50,
+                    ),
                     TextFormField(
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       cursorColor: kPrimaryColor,
-                      onSaved: (val) {
-                        myemail = val!;
-                      },
+                      controller: emailController,
+                      
                       decoration: const InputDecoration(
                         hintText: "E-mail",
                         prefixIcon: Padding(
@@ -119,9 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: TextFormField(
                         textInputAction: TextInputAction.done,
                         obscureText: true,
-                        onSaved: (val) {
-                          mypassword = val!;
-                        },
+                        controller: passwordController,
                         cursorColor: kPrimaryColor,
                         decoration: const InputDecoration(
                           hintText: "Password",
@@ -141,6 +153,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         child: Text(
                           "Login".toUpperCase(),
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -154,10 +168,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            const SocalSignUp(),
+            
           ],
         )),
       ),
     );
+  
   }
 }

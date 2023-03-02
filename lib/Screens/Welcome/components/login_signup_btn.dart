@@ -26,15 +26,18 @@ class LoginAndSignupBtn extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        ElevatedButton(
-          onPressed: () {
-            Get.offAll(() => const SignUpScreen());
-          },
-          style: ElevatedButton.styleFrom(
-              primary: kPrimaryLightColor, elevation: 0),
-          child: Text(
-            "Sign Up".toUpperCase(),
-            style: const TextStyle(color: Colors.black),
+        Hero(
+          tag: "signup_btn",
+          child: ElevatedButton(
+            onPressed: () {
+              Get.offAll(() => const SignUpScreen());
+            },
+            style: ElevatedButton.styleFrom(
+                primary: kPrimaryLightColor, elevation: 0),
+            child: Text(
+              "Sign Up".toUpperCase(),
+              style: const TextStyle(color: Colors.black),
+            ),
           ),
         ),
       ],
