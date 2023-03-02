@@ -24,6 +24,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   // ignore: prefer_typing_uninitialized_variables
   var myusername, myemail, mypassword;
   final TextEditingController usernameController = TextEditingController();
+  final TextEditingController firstnameController = TextEditingController();
+  final TextEditingController lastnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   signUp() async {
@@ -39,6 +41,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         await FirebaseFirestore.instance.collection("users").add({
           "username": usernameController.text.trim(),
           "email": emailController.text.trim(),
+          "fisrtname": firstnameController.text.trim(),
+          "lastname": lastnameController.text.trim(),
           "TokenId": await FirebaseMessaging.instance.getToken(),
         });
         Get.off(() => const HomePage());
@@ -103,7 +107,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             const SizedBox(
               height: 10,
             ),
-            Image.asset("assets/images/splashimage.png",width: 400,),
+            Image.asset(
+              "assets/images/splashimage.png",
+              width: 300,
+            ),
             Form(
               key: formState,
               child: Padding(
@@ -137,6 +144,56 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
                     ),
+                 
+                    TextFormField(
+                      validator: (val) {
+                        if (val!.length > 10) {
+                          return "fistname cant to be larger than 10 letter";
+                        } else if (val.length < 2) {
+                          return "fistname cant to be less than 2 letter";
+                        } else {
+                          return null;
+                        }
+                      },
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      cursorColor: kPrimaryColor,
+                      controller: firstnameController,
+                      decoration: const InputDecoration(
+                        hintText: "Fistname",
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.all(defaultPadding),
+                          child: Icon(Icons.person),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.symmetric(vertical: defaultPadding),
+                      child: TextFormField(
+                        validator: (val) {
+                          if (val!.length > 10) {
+                            return "LastName cant to be larger than 10 letter";
+                          } else if (val.length < 2) {
+                            return "LastName cant to be less than 2 letter";
+                          } else {
+                            return null;
+                          }
+                        },
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        cursorColor: kPrimaryColor,
+                        controller: lastnameController,
+                        decoration: const InputDecoration(
+                          hintText: "LastName",
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.all(defaultPadding),
+                            child: Icon(Icons.person),
+                          ),
+                        ),
+                      ),
+                    ),
+                 
                     TextFormField(
                       validator: (val) {
                         if (val!.length > 100) {

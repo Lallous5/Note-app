@@ -29,13 +29,12 @@ class _EditeNotesState extends State<EditeNotes> {
   CollectionReference notesRef = FirebaseFirestore.instance.collection("notes");
   GlobalKey<FormState> formState = GlobalKey();
   // ignore: prefer_typing_uninitialized_variables
-  var title, body, imgURL;
-  File? file;
+  var title, body;
   late Reference ref;
 
   editNote(context) async {
     var formData = formState.currentState;
-    if (file == null) {
+
       if (formData!.validate()) {
         loadingOverlay(context);
         formData.save();
@@ -49,25 +48,7 @@ class _EditeNotesState extends State<EditeNotes> {
             .catchError((e) {
               print(e);
             });
-      }
-    } else {
-      if (formData!.validate()) {
-        loadingOverlay(context);
-        formData.save();
-        await ref.putFile(file!);
-        imgURL = await ref.getDownloadURL();
-        await notesRef
-            .doc(widget.docId)
-            .update({
-              "title": title,
-              "body": body,
-              "image": imgURL,
-            })
-            .then((value) => Get.offAll(() => const HomePage()))
-            .catchError((e) {
-              print(e);
-            });
-      }
+      
     }
   }
 
@@ -155,11 +136,11 @@ class _EditeNotesState extends State<EditeNotes> {
                   ],
                 ),
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    showBottomSheet(context);
-                  },
-                  child: const Text("Edit Image")),
+              // ElevatedButton(
+              //     onPressed: () {
+              //       showBottomSheet(context);
+              //     },
+              //     child: const Text("Edit Image")),
             ],
           ),
         ),
@@ -167,93 +148,93 @@ class _EditeNotesState extends State<EditeNotes> {
     );
   }
 
-  showBottomSheet(context) {
-    return showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(20),
-            height: 200,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Edit Image",
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                InkWell(
-                  onTap: () async {
-                    var picked = await ImagePicker()
-                        .getImage(source: ImageSource.gallery);
-                    if (picked != null) {
-                      file = File(picked.path);
-                      var ran = Random().nextInt(99999);
+  // showBottomSheet(context) {
+  //   return showModalBottomSheet(
+  //       context: context,
+  //       builder: (context) {
+  //         return Container(
+  //           padding: const EdgeInsets.all(20),
+  //           height: 200,
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.center,
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             children: [
+  //               const Text(
+  //                 "Edit Image",
+  //                 style: TextStyle(
+  //                   fontSize: 22,
+  //                   fontWeight: FontWeight.bold,
+  //                 ),
+  //               ),
+  //               InkWell(
+  //                 onTap: () async {
+  //                   var picked = await ImagePicker()
+  //                       .getImage(source: ImageSource.gallery);
+  //                   if (picked != null) {
+  //                     file = File(picked.path);
+  //                     var ran = Random().nextInt(99999);
 
-                      var nameimg = basename(picked.path);
-                      nameimg = "$ran$nameimg";
+  //                     var nameimg = basename(picked.path);
+  //                     nameimg = "$ran$nameimg";
 
-                      ref =
-                          FirebaseStorage.instance.ref("images").child(nameimg);
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    width: double.infinity,
-                    child: Row(
-                      children: const [
-                        Icon(
-                          Icons.photo_outlined,
-                          size: 30,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text("From Gallery"),
-                      ],
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () async {
-                    var picked = await ImagePicker()
-                        .getImage(source: ImageSource.camera);
-                    if (picked != null) {
-                      file = File(picked.path);
-                      var ran = Random().nextInt(99999);
+  //                     ref =
+  //                         FirebaseStorage.instance.ref("images").child(nameimg);
+  //                     Navigator.of(context).pop();
+  //                   }
+  //                 },
+  //                 child: Container(
+  //                   padding: const EdgeInsets.all(10),
+  //                   width: double.infinity,
+  //                   child: Row(
+  //                     children: const [
+  //                       Icon(
+  //                         Icons.photo_outlined,
+  //                         size: 30,
+  //                       ),
+  //                       SizedBox(
+  //                         height: 20,
+  //                       ),
+  //                       Text("From Gallery"),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //               InkWell(
+  //                 onTap: () async {
+  //                   var picked = await ImagePicker()
+  //                       .getImage(source: ImageSource.camera);
+  //                   if (picked != null) {
+  //                     file = File(picked.path);
+  //                     var ran = Random().nextInt(99999);
 
-                      var nameimg = basename(picked.path);
-                      nameimg = "$ran$nameimg";
+  //                     var nameimg = basename(picked.path);
+  //                     nameimg = "$ran$nameimg";
 
-                      ref =
-                          FirebaseStorage.instance.ref("images").child(nameimg);
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    width: double.infinity,
-                    child: Row(
-                      children: const [
-                        Icon(
-                          Icons.camera,
-                          size: 30,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text("From Camera"),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
+  //                     ref =
+  //                         FirebaseStorage.instance.ref("images").child(nameimg);
+  //                     Navigator.of(context).pop();
+  //                   }
+  //                 },
+  //                 child: Container(
+  //                   padding: const EdgeInsets.all(10),
+  //                   width: double.infinity,
+  //                   child: Row(
+  //                     children: const [
+  //                       Icon(
+  //                         Icons.camera,
+  //                         size: 30,
+  //                       ),
+  //                       SizedBox(
+  //                         height: 20,
+  //                       ),
+  //                       Text("From Camera"),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       });
+  // }
 }
