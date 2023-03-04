@@ -1,15 +1,23 @@
 note-app using firebase (add edit delete view) notes
 Home Screen
-![homepage](https://user-images.githubusercontent.com/94794671/188508410-c0c0b033-b5b5-4504-9e03-d5e7db18b167.png)
+![photo_2023-03-04_14-49-06](https://user-images.githubusercontent.com/94794671/222902350-253b8f6d-024e-4332-8aba-0fe7e50ec28b.jpg)
 Add notes
-![add notes](https://user-images.githubusercontent.com/94794671/188508459-5e910c5e-cefb-4a72-a757-2911713067ba.png)
+![photo_2023-03-04_14-51-21](https://user-images.githubusercontent.com/94794671/222902409-8e54f786-1029-470f-9faa-04b7a4938ca0.jpg)
+
 Edit Screen
-![edit notes](https://user-images.githubusercontent.com/94794671/188508465-86338b60-116f-492c-8200-b167b6debfb4.png)
+![photo_2023-03-04_14-51-23](https://user-images.githubusercontent.com/94794671/222902412-2716b907-161e-4875-8a02-05c90b5f79eb.jpg)
+
 View Notes
-![views notes](https://user-images.githubusercontent.com/94794671/188508468-31864459-4e48-484b-b51c-6142c47cc2b9.png)
+![photo_2023-03-04_14-49-08](https://user-images.githubusercontent.com/94794671/222902358-130fa019-b86a-4f06-a205-92678f441b01.jpg)
+
 
 And here Screens Authentication
+splash screen
+![photo_2023-03-04_14-49-00](https://user-images.githubusercontent.com/94794671/222902376-f41a593c-09e7-4bb2-a85f-81177e18d8b4.jpg)
+
 SignIN
-![signin](https://user-images.githubusercontent.com/94794671/188508668-5911f147-babd-4c31-9430-36991f005dd1.png)
+![photo_2023-03-04_14-49-02](https://user-images.githubusercontent.com/94794671/222902362-4f8896e9-7a26-47c7-97b5-c63d8fe0e4a9.jpg)
+
 SignUp
-![signup](https://user-images.githubusercontent.com/94794671/188508689-50c347fd-b186-4a29-b6a0-d1f8f0d4474f.png)
+![photo_2023-03-04_14-49-04](https://user-images.githubusercontent.com/94794671/222902367-d781d3d8-29f3-43da-9637-b0dc5f348db6.jpg)
+
